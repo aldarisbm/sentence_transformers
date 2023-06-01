@@ -12,5 +12,8 @@ deactivate_venv:
 install_requirements:
 	pip install -r requirements.txt
 
+run:
+	flask --app main run
+
 test:
 	curl -X POST -H "Content-Type: application/json" -d '{"text":"what are the best romcoms in the world?"}' http://localhost:5000/get_embedding
