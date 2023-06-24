@@ -1,23 +1,18 @@
-## DOES NOT WORK YET
-FROM python:3.7.4-slim-buster as base
-
+FROM continuumio/miniconda3:latest
+ 
 # set working directory
 WORKDIR /app
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# copy project
+COPY main.py environment.yml ./
 
 # install system dependencies
-RUN apt-get update \
-    && apt-get -y install flask \
-    && apt-get clean
-
-# install python dependencies
-RUN pip install --upgrade pip
-COPY ./requirements.txt /app/requirements.txt
-RUN pip install -r requirements.txt
+RUN apt-get update
+RUN apt-get install curl -y 
+RUN conda update --all -y
+RUN conda env create -f environment.yml
+RUN apt-get clean
 
 EXPOSE 5000
 
-CMD ["flask", "--app", "main", "run"]
+CMD ["/opt/conda/bin/conda", "activate", "&&", "env", " RUN", "flask", "--app", "main", "run"]
